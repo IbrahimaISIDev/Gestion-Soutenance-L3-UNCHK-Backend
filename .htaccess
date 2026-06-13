@@ -1,0 +1,6 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteRule ^(config|includes|database)/ - [F,L]
+</IfModule>
+Options -Indexes
+AddDefaultCharset UTF-8

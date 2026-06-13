@@ -2,7 +2,8 @@
 
 USE gest_soutenance;
 
-SET @pwd = '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi';
+-- Hash généré avec password_hash('password', PASSWORD_BCRYPT)
+SET @pwd = '$2y$10$1oSPf1mG8l6qXNMMahmgp.jn5dJC34Kv58VTyvd0Tj1a.W3hNF1Py';
 
 INSERT INTO utilisateurs (nom, prenom, email, mot_de_passe, role) VALUES
 ('Diallo', 'Amadou',   'admin@univ.sn',      @pwd, 'administrateur'),
