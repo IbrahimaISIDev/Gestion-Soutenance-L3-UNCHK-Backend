@@ -1,58 +1,153 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 🎓 Gestion des Soutenances - GestSoutenance
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## 📖 Présentation du Projet
 
-## About Laravel
+**GestSoutenance** est une application web développée pour **l'Université de Thiès / UNCHK** dans le cadre d'un projet de fin d'études.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+L'objectif principal est de **numériser et d'optimiser la gestion des soutenances universitaires** en remplaçant les processus manuels (papiers, emails, tableaux Excel) par une plateforme centralisée, sécurisée et accessible en ligne.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+---
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## 🎯 Objectifs du Projet
 
-## Learning Laravel
+- **Centraliser** toutes les informations liées aux soutenances (étudiants, jurys, salles, dates)
+- **Simplifier** la planification et l'organisation des soutenances
+- **Automatiser** la génération des documents officiels (convocation, PV, attestation)
+- **Faciliter** la communication entre les différents acteurs (étudiants, enseignants, secrétariat)
+- **Sécuriser** l'accès aux données avec un système d'authentification par rôle
+- **Fournir** des tableaux de bord statistiques pour le suivi et l'analyse
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+---
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## 👥 Acteurs du Système
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+L'application gère **5 rôles** distincts avec des fonctionnalités adaptées :
 
-## Agentic Development
+| Rôle | Responsabilités |
+|------|-----------------|
+| **Administrateur** | Gestion des utilisateurs, des salles, configuration du système |
+| **Secrétaire Pédagogique** | Planification des soutenances, affectation des salles, envoi des convocations |
+| **Enseignant / Jury** | Consultation des soutenances, confirmation de participation, saisie des notes |
+| **Étudiant** | Consultation de sa soutenance, téléchargement de la convocation, consultation des résultats |
+| **Responsable Pédagogique** | Supervision, statistiques, validation des PV, exports de données |
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+---
+
+## 🛠️ Technologies Utilisées
+
+### Backend (PHP & Laravel)
+
+| Technologie | Description |
+|-------------|-------------|
+| **PHP 8.2.12** | Langage de programmation côté serveur |
+| **Laravel 12.62.0** | Framework PHP moderne (MVC, ORM, Sécurité) |
+| **MySQL** | Système de gestion de base de données relationnelle |
+| **Eloquent ORM** | Gestion des bases de données avec modèles |
+| **Laravel Breeze** | Authentification (login, register, password reset) |
+| **Middleware** | Vérification des rôles et des permissions |
+| **Blade** | Moteur de templates pour les vues |
+
+### Frontend
+
+| Technologie | Description |
+|-------------|-------------|
+| **Blade** | Templating PHP intégré à Laravel |
+| **Bootstrap 5** | Framework CSS pour l'interface responsive |
+| **JavaScript** | Interactions dynamiques (Chart.js) |
+| **FontAwesome** | Icônes vectorielles |
+| **Chart.js** | Graphiques statistiques |
+
+### Outils et Services
+
+| Technologie | Description |
+|-------------|-------------|
+| **DomPDF** | Génération de documents PDF (convocation, PV, attestation) |
+| **PHPMailer** | Envoi d'emails (convocations, notifications) |
+| **Git** | Versionnement du code source |
+| **GitHub** | Hébergement du code et collaboration |
+
+---
+
+## 📋 Fonctionnalités Implémentées
+
+### Module Authentification
+- ✅ Inscription et connexion sécurisée
+- ✅ Gestion des sessions
+- ✅ Vérification des rôles
+- ✅ Changement de mot de passe
+
+### Module Administration
+- ✅ CRUD Utilisateurs
+- ✅ CRUD Salles
+- ✅ Audit des actions
+- ✅ Gestion des permissions
+
+### Module Secrétariat
+- ✅ Planification des soutenances
+- ✅ Affectation des salles
+- ✅ Détection des conflits de planning
+- ✅ Confirmation des soutenances
+
+### Module Enseignant
+- ✅ Consultation des soutenances dirigées
+- ✅ Confirmation de participation au jury
+- ✅ Saisie des notes (PV)
+- ✅ Déclaration des indisponibilités
+
+### Module Étudiant
+- ✅ Consultation de la soutenance
+- ✅ Téléchargement de la convocation
+- ✅ Consultation des résultats
+- ✅ Téléchargement du PV et de l'attestation
+
+### Module Responsable
+- ✅ Tableaux de bord statistiques
+- ✅ Graphiques par filière et par type
+- ✅ Export CSV/PDF des données
+
+---
+
+## 🚀 Installation
+
+### Prérequis
+
+- PHP >= 8.0
+- MySQL
+- Composer
+- Node.js & NPM (optionnel pour les assets)
+
+### Étapes d'installation
 
 ```bash
-composer require laravel/boost --dev
+# 1. Cloner le dépôt
+git clone https://github.com/mamadoudiaobalde-cell/travail-groupe-s6.git
+cd travail-groupe-s6
 
-php artisan boost:install
-```
+# 2. Aller sur la branche de développement
+git checkout layebara-tech
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+# 3. Installer les dépendances PHP
+composer install
 
-## Contributing
+# 4. Configurer l'environnement
+cp .env.example .env
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+# 5. Générer la clé de l'application
+php artisan key:generate
 
-## Code of Conduct
+# 6. Configurer la base de données dans .env
+# DB_CONNECTION=mysql
+# DB_HOST=127.0.0.1
+# DB_PORT=3306
+# DB_DATABASE=gest_soutenance
+# DB_USERNAME=root
+# DB_PASSWORD=
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+# 7. Créer la base de données
+# CREATE DATABASE gest_soutenance;
 
-## Security Vulnerabilities
+# 8. Lancer les migrations
+php artisan migrate
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+# 9. Démarrer le serveur
+php artisan serve
