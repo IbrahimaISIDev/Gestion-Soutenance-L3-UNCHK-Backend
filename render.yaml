@@ -1,0 +1,58 @@
+services:
+  - type: web
+    name: gest-soutenance-api
+    runtime: php
+    plan: free
+    buildCommand: chmod +x ./render-build.sh && ./render-build.sh
+    startCommand: php -S 0.0.0.0:$PORT -t public
+    envVars:
+      - key: APP_NAME
+        value: GestSoutenance
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: "false"
+      - key: APP_KEY
+        generateValue: true
+      - key: APP_URL
+        sync: false        # à remplir après le 1er déploiement
+      - key: DB_CONNECTION
+        value: pgsql
+      - key: DB_HOST
+        fromDatabase:
+          name: gest-soutenance-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: gest-soutenance-db
+          property: port
+      - key: DB_DATABASE
+        fromDatabase:
+          name: gest-soutenance-db
+          property: database
+      - key: DB_USERNAME
+        fromDatabase:
+          name: gest-soutenance-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: gest-soutenance-db
+          property: password
+      - key: SESSION_DRIVER
+        value: array
+      - key: CACHE_STORE
+        value: array
+      - key: QUEUE_CONNECTION
+        value: sync
+      - key: FRONTEND_URL
+        sync: false        # à remplir avec l'URL Vercel après déploiement
+      - key: LOG_CHANNEL
+        value: stderr
+      - key: LOG_LEVEL
+        value: error
+
+databases:
+  - name: gest-soutenance-db
+    plan: free
+    databaseName: gest_soutenance
+    user: gest_admin
