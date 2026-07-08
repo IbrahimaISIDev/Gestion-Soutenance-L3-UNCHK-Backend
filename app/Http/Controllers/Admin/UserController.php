@@ -14,7 +14,8 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::all();
+        $users = User::latest()->paginate(15);
+
         return view('admin.users.index', compact('users'));
     }
 
@@ -45,8 +46,8 @@ class UserController extends Controller
             'is_active' => true,
         ]);
 
-        return redirect()->route('admin.users.index')
-                         ->with('success', 'Utilisateur créé avec succès. Mot de passe : password123');
+        return redirect()->route('users.index')
+            ->with('success', 'Utilisateur créé avec succès. Mot de passe : password123');
     }
 
     /**
@@ -55,6 +56,7 @@ class UserController extends Controller
     public function show(string $id)
     {
         $user = User::findOrFail($id);
+
         return view('admin.users.show', compact('user'));
     }
 
@@ -64,6 +66,7 @@ class UserController extends Controller
     public function edit(string $id)
     {
         $user = User::findOrFail($id);
+
         return view('admin.users.edit', compact('user'));
     }
 
@@ -76,14 +79,14 @@ class UserController extends Controller
 
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,' . $id,
+            'email' => 'required|email|unique:users,email,'.$id,
             'role' => 'required|in:administrateur,secretaire_pedagogique,enseignant,etudiant,responsable_pedagogique',
         ]);
 
         $user->update($validated);
 
-        return redirect()->route('admin.users.index')
-                         ->with('success', 'Utilisateur modifié avec succès');
+        return redirect()->route('users.index')
+            ->with('success', 'Utilisateur modifié avec succès');
     }
 
     /**
@@ -94,14 +97,14 @@ class UserController extends Controller
         $user = User::findOrFail($id);
 
         if ($user->role === 'administrateur') {
-            return redirect()->route('admin.users.index')
-                             ->with('error', 'Impossible de supprimer un administrateur');
+            return redirect()->route('users.index')
+                ->with('error', 'Impossible de supprimer un administrateur');
         }
 
         $user->delete();
 
-        return redirect()->route('admin.users.index')
-                         ->with('success', 'Utilisateur supprimé avec succès');
+        return redirect()->route('users.index')
+            ->with('success', 'Utilisateur supprimé avec succès');
     }
 
     /**
@@ -109,11 +112,11 @@ class UserController extends Controller
      */
     public function toggle(User $user)
     {
-        $user->is_active = !$user->is_active;
+        $user->is_active = ! $user->is_active;
         $user->save();
 
-        return redirect()->route('admin.users.index')
-                         ->with('success', 'Statut modifié avec succès');
+        return redirect()->route('users.index')
+            ->with('success', 'Statut modifié avec succès');
     }
 
     /**
@@ -124,7 +127,7 @@ class UserController extends Controller
         $user->password = Hash::make('password123');
         $user->save();
 
-        return redirect()->route('admin.users.index')
-                         ->with('success', 'Mot de passe réinitialisé à "password123"');
+        return redirect()->route('users.index')
+            ->with('success', 'Mot de passe réinitialisé à "password123"');
     }
 }

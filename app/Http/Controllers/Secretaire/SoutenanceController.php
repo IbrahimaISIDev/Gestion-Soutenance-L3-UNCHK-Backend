@@ -3,19 +3,30 @@
 namespace App\Http\Controllers\Secretaire;
 
 use App\Http\Controllers\Controller;
+use App\Models\Salle;
 use App\Models\Soutenance;
 use App\Models\User;
-use App\Models\Salle;
+use App\Services\AuditService;
+use App\Services\NotificationService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class SoutenanceController extends Controller
 {
+    public function __construct(
+        protected NotificationService $notificationService,
+        protected AuditService $auditService,
+    ) {}
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $soutenances = Soutenance::with(['etudiant', 'directeur', 'salle'])->get();
+        $soutenances = Soutenance::with(['etudiant', 'directeur', 'salle'])
+            ->latest()
+            ->paginate(15);
+
         return view('secretaire.soutenances.index', compact('soutenances'));
     }
 
@@ -27,7 +38,7 @@ class SoutenanceController extends Controller
         $etudiants = User::where('role', 'etudiant')->get();
         $enseignants = User::where('role', 'enseignant')->get();
         $salles = Salle::where('actif', true)->get();
-        
+
         return view('secretaire.soutenances.create', compact('etudiants', 'enseignants', 'salles'));
     }
 
@@ -48,10 +59,12 @@ class SoutenanceController extends Controller
             'statut' => 'sometimes|in:brouillon,planifiee,confirmee,realisee,annulee',
         ]);
 
-        Soutenance::create($validated);
+        $soutenance = Soutenance::create($validated);
 
-        return redirect()->route('secretaire.soutenances.index')
-                         ->with('success', 'Soutenance planifiée avec succès');
+        $this->auditService->log(Auth::id(), 'soutenance.store', "Soutenance #{$soutenance->id} créée : {$soutenance->titre}");
+
+        return redirect()->route('soutenances.index')
+            ->with('success', 'Soutenance planifiée avec succès');
     }
 
     /**
@@ -62,7 +75,7 @@ class SoutenanceController extends Controller
         $etudiants = User::where('role', 'etudiant')->get();
         $enseignants = User::where('role', 'enseignant')->get();
         $salles = Salle::where('actif', true)->get();
-        
+
         return view('secretaire.soutenances.edit', compact('soutenance', 'etudiants', 'enseignants', 'salles'));
     }
 
@@ -85,8 +98,10 @@ class SoutenanceController extends Controller
 
         $soutenance->update($validated);
 
-        return redirect()->route('secretaire.soutenances.index')
-                         ->with('success', 'Soutenance modifiée avec succès');
+        $this->auditService->log(Auth::id(), 'soutenance.update', "Soutenance #{$soutenance->id} modifiée");
+
+        return redirect()->route('soutenances.index')
+            ->with('success', 'Soutenance modifiée avec succès');
     }
 
     /**
@@ -94,10 +109,13 @@ class SoutenanceController extends Controller
      */
     public function destroy(Soutenance $soutenance)
     {
+        $id = $soutenance->id;
         $soutenance->delete();
 
-        return redirect()->route('secretaire.soutenances.index')
-                         ->with('success', 'Soutenance supprimée avec succès');
+        $this->auditService->log(Auth::id(), 'soutenance.destroy', "Soutenance #{$id} supprimée");
+
+        return redirect()->route('soutenances.index')
+            ->with('success', 'Soutenance supprimée avec succès');
     }
 
     /**
@@ -106,11 +124,22 @@ class SoutenanceController extends Controller
     public function confirm($id)
     {
         $soutenance = Soutenance::findOrFail($id);
+
+        if (! $soutenance->salle_id) {
+            return redirect()->back()->with('error', 'Impossible de confirmer : aucune salle n\'est assignée');
+        }
+
+        if ($soutenance->jury()->count() === 0) {
+            return redirect()->back()->with('error', 'Impossible de confirmer : aucun jury n\'est composé');
+        }
+
         $soutenance->statut = 'confirmee';
         $soutenance->save();
 
-        return redirect()->route('secretaire.soutenances.index')
-                         ->with('success', 'Soutenance confirmée avec succès');
+        $this->auditService->log(Auth::id(), 'soutenance.confirm', "Soutenance #{$soutenance->id} confirmée");
+
+        return redirect()->route('soutenances.index')
+            ->with('success', 'Soutenance confirmée avec succès');
     }
 
     /**
@@ -122,7 +151,10 @@ class SoutenanceController extends Controller
         $soutenance->statut = 'annulee';
         $soutenance->save();
 
-        return redirect()->route('secretaire.soutenances.index')
-                         ->with('success', 'Soutenance annulée avec succès');
+        $this->notificationService->notifierAnnulation($soutenance);
+        $this->auditService->log(Auth::id(), 'soutenance.cancel', "Soutenance #{$soutenance->id} annulée");
+
+        return redirect()->route('soutenances.index')
+            ->with('success', 'Soutenance annulée avec succès');
     }
 }
