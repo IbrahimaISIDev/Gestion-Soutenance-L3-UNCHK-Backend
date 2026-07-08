@@ -4,6 +4,7 @@
 #  Usage : sudo bash deploy-vps.sh
 # ============================================================
 set -e
+cd /root   # évite les erreurs getcwd si le shell était dans un dossier supprimé
 
 # ── Configuration ────────────────────────────────────────────
 BACKEND_REPO="https://github.com/mamadoudiaobalde-cell/travail-groupe-s6.git"
