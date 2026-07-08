@@ -2,4 +2,11 @@ seruploads/*
 !uploads/.gitkeep
 .env
 *.log
-node_modules
+node_modules/
+vendor/
+.phpunit.result.cache
+bootstrap/cache/
+storage/logs/*.log
+public/build/
+public/hot
+database/database.sqlite
