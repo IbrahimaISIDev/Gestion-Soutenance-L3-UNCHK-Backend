@@ -1,3 +1,4 @@
+client/
 seruploads/*
 !uploads/.gitkeep
 .env
