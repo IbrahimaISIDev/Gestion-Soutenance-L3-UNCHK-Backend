@@ -60,17 +60,19 @@ class SoutenanceSeeder extends Seeder
         ];
 
         foreach ($sujets as $index => $sujet) {
-            Soutenance::create([
-                'etudiant_id' => $etudiants[$index % $etudiants->count()]->id,
-                'directeur_id' => $enseignants[$index % $enseignants->count()]->id,
-                'titre' => $sujet['titre'],
-                'filiere' => $sujet['filiere'],
-                'type' => $sujet['type'],
-                'date' => Carbon::now()->addDays(($index + 1) * 7),
-                'heure' => '09:00:00',
-                'salle_id' => $salles[$index % $salles->count()]->id,
-                'statut' => $sujet['statut'],
-            ]);
+            Soutenance::firstOrCreate(
+                ['titre' => $sujet['titre']],
+                [
+                    'etudiant_id'  => $etudiants[$index % $etudiants->count()]->id,
+                    'directeur_id' => $enseignants[$index % $enseignants->count()]->id,
+                    'filiere'      => $sujet['filiere'],
+                    'type'         => $sujet['type'],
+                    'date'         => Carbon::now()->addDays(($index + 1) * 7),
+                    'heure'        => '09:00:00',
+                    'salle_id'     => $salles[$index % $salles->count()]->id,
+                    'statut'       => $sujet['statut'],
+                ]
+            );
         }
 
         $this->command?->info('✅ ' . Soutenance::count() . ' soutenances créées !');
