@@ -21,17 +21,16 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 WORKDIR /app
 
 COPY composer.json composer.lock ./
-RUN composer install --no-dev --optimize-autoloader --no-interaction --no-scripts
+RUN composer install --no-dev --no-scripts --no-interaction
 
 COPY . .
 
-RUN php artisan package:discover --ansi 2>/dev/null || true
-
-RUN mkdir -p bootstrap/cache \
-    storage/framework/cache/data \
-    storage/framework/sessions \
-    storage/framework/views \
-    storage/logs \
+RUN composer dump-autoload --optimize \
+    && mkdir -p bootstrap/cache \
+       storage/framework/cache/data \
+       storage/framework/sessions \
+       storage/framework/views \
+       storage/logs \
     && chmod -R 777 bootstrap/cache storage
 
 EXPOSE 10000
