@@ -1,0 +1,11 @@
+vendor/
+node_modules/
+client/
+.git/
+.env
+.env.local
+.env.*.local
+*.log
+.phpunit.result.cache
+tests/
+deploy-vps.sh

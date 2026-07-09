@@ -25,7 +25,7 @@ RUN composer install --no-dev --optimize-autoloader --no-interaction --no-script
 
 COPY . .
 
-RUN composer run-script post-autoload-dump 2>/dev/null || true
+RUN php artisan package:discover --ansi 2>/dev/null || true
 
 RUN mkdir -p bootstrap/cache \
     storage/framework/cache/data \
